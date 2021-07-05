@@ -1,0 +1,5 @@
+docker build -f "D:\Learnig\solution\VoskApi\VoskApi\Dockerfile" --force-rm -t voskapi  --label "com.microsoft.created-by=visual-studio" --label "com.microsoft.visual-studio.project-name=VoskApi" "D:\Learnig\solution\VoskApi"
+
+
+docker run -d -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true" -p 49165:80 --name VoskApi voskapi:latest
+http://localhost:49165/swagger/index.html
