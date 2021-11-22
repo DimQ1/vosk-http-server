@@ -22,7 +22,7 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             Vosk.Vosk.SetLogLevel(-1);
         }
 
-   
+
         public RecognizedChunk Recognize(Stream stream)
         {
             var recognizedChunks = RecognizeChunks(_wavUtil.ConvertToWavFormatForRecognize(stream));
@@ -33,8 +33,17 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             return new RecognizedChunk()
             {
                 Result = results,
-                Text = text
+                Text = text,
+                Str = GetSubRip(results)
             };
+        }
+
+        private string GetSubRip(List<Result> results)
+        {
+            var index = 1;
+            return string.Join("\r\n", results.Chunk(5).Select(chank =>
+                     $"{index++}\r\n{TimeSpan.FromMilliseconds(chank.First().Start * 1000):hh\\:mm\\:ss\\,fff} --> {TimeSpan.FromMilliseconds(chank.Last().End * 1000):hh\\:mm\\:ss\\,fff}\r\n{string.Join(" ", chank.Select(ch => ch.Word))}\r\n")
+             );
         }
 
         public List<RecognizedChunk> RecognizeChunks(Stream stream)
