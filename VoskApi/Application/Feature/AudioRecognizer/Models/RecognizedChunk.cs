@@ -10,5 +10,8 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Models
 
         [JsonPropertyName("text")]
         public string Text { get; set; }
+        
+        [JsonPropertyName("str")]
+        public string Str { get; set; }
     }
 }
