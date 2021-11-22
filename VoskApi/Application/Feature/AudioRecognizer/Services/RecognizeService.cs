@@ -12,18 +12,20 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
     public class RecognizeService : IRecognizeService
     {
         private Model _model;
+        private readonly IWavUtil _wavUtil;
 
-        public RecognizeService(IModelInitialization modelInitialization)
+        public RecognizeService(IModelInitialization modelInitialization, IWavUtil wavUtil)
         {
+            _wavUtil = wavUtil;
             _model = modelInitialization.Model;
 
             Vosk.Vosk.SetLogLevel(-1);
         }
 
+   
         public RecognizedChunk Recognize(Stream stream)
         {
-
-            var recognizedChunks = RecognizeChunks(stream);
+            var recognizedChunks = RecognizeChunks(_wavUtil.ConvertToWavFormatForRecognize(stream));
 
             var results = recognizedChunks.SelectMany(ch => ch?.Result ?? new List<Result>()).ToList();
             var text = string.Join(" ", recognizedChunks.Select(ch => ch.Text).ToList());
