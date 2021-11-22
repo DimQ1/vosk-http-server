@@ -1,10 +1,7 @@
-﻿using System.IO;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using VoskApi.Application.Feature.AudioRecognizer.Services;
-using VoskApi.Application.Helpers;
 
 namespace VoskApi.Application
 {
@@ -15,9 +12,10 @@ namespace VoskApi.Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddSingleton<IRecognizeService, RecognizeService>();
             services.AddSingleton<IModelInitialization, ModelInitialization>();
+            services.AddSingleton<IWavUtil, WavUtil>();
 
             var buildServiceProvider = services.BuildServiceProvider();
-            buildServiceProvider.GetRequiredService<IModelInitialization>();
+            buildServiceProvider.GetRequiredService<IRecognizeService>();
 
         }
     }

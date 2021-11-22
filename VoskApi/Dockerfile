@@ -19,7 +19,7 @@ RUN echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";"
 RUN apt-get update && apt install unzip
 RUN apt install libatomic1
 COPY ./vosk-model-ru-*.zip .
-ENV RUVERSION 0.10
+ENV RUVERSION 0.22
 RUN dir
 RUN unzip vosk-model-ru-${RUVERSION}.zip \
    && mv vosk-model-ru-${RUVERSION} model \

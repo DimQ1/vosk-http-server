@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Vosk;
-using VoskApi.Application.Helpers;
 
 namespace VoskApi.Application.Feature.AudioRecognizer.Services
 {
