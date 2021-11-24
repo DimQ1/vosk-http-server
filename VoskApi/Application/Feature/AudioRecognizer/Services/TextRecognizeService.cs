@@ -2,35 +2,37 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using Vosk;
+using VoskApi.Application.Feature.AudioRecognizer.Helpers;
 using VoskApi.Application.Feature.AudioRecognizer.Models;
 
 namespace VoskApi.Application.Feature.AudioRecognizer.Services
 {
-    public class RecognizeService : IRecognizeService
+    public class TextRecognizeService : ITextRecognizeService
     {
-        private Model _model;
+        private readonly SpkModel _spkModel;
+        private readonly Model _model;
         private readonly IWavUtil _wavUtil;
 
-        public RecognizeService(IModelInitialization modelInitialization, IWavUtil wavUtil)
+        public TextRecognizeService(IWavUtil wavUtil)
         {
             _wavUtil = wavUtil;
-            _model = modelInitialization.Model;
+            _model = ModelInitialization.TextModel;
+            _spkModel = ModelInitialization.SpeakerModel;
 
             Vosk.Vosk.SetLogLevel(-1);
         }
 
 
-        public RecognizedChunk Recognize(Stream stream)
+        public TextRecognized Recognize(Stream stream)
         {
             var recognizedChunks = RecognizeChunks(_wavUtil.ConvertToWavFormatForRecognize(stream));
 
             var results = recognizedChunks.SelectMany(ch => ch?.Result ?? new List<Result>()).ToList();
             var text = string.Join(" ", recognizedChunks.Select(ch => ch.Text).ToList());
 
-            return new RecognizedChunk()
+            return new TextRecognized()
             {
                 Result = results,
                 Text = text,
@@ -46,11 +48,13 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
              );
         }
 
-        public List<RecognizedChunk> RecognizeChunks(Stream stream)
+        public List<TextRecognized> RecognizeChunks(Stream stream)
         {
-            var recognizedResults = new List<RecognizedChunk>();
+            var recognizedResults = new List<TextRecognized>();
 
             using var rec = new VoskRecognizer(_model, 16000.0f);
+            rec.SetSpkModel(_spkModel);
+
             rec.SetMaxAlternatives(0);
             rec.SetWords(true);
 
@@ -61,12 +65,15 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             {
                 if (rec.AcceptWaveform(buffer, bytesRead))
                 {
-                    var recognizedResultChunk = JsonSerializer.Deserialize<RecognizedChunk>(rec.Result());
+                    var result = rec.Result();
+                    var recognizedResultChunk = JsonSerializer.Deserialize<TextRecognized>(result);
                     recognizedResults.Add(recognizedResultChunk);
                 }
+
+
             }
 
-            recognizedResults.Add(JsonSerializer.Deserialize<RecognizedChunk>(rec.FinalResult()));
+            recognizedResults.Add(JsonSerializer.Deserialize<TextRecognized>(rec.FinalResult()));
 
             return recognizedResults;
         }

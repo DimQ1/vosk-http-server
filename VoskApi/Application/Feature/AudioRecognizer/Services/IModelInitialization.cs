@@ -4,6 +4,7 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
 {
     public interface IModelInitialization
     {
-        Model Model { get; }
+        Model TextModel { get; }
+        SpkModel SpeakerModel { get; }
     }
 }

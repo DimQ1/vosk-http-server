@@ -2,7 +2,7 @@
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
-namespace VoskApi.Application.Feature.AudioRecognizer.Services
+namespace VoskApi.Application.Feature.AudioRecognizer.Helpers
 {
     public class WavUtil : IWavUtil
     {

@@ -13,8 +13,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using VoskApi.Application;
 using VoskApi.Application.Feature.AudioRecognizer.Services;
+using VoskApi.Infrastructure;
 
 namespace VoskApi
 {
@@ -45,10 +48,9 @@ namespace VoskApi
 
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VoskApi", Version = "v1" });
-            });
+            services.AddVersionedApiExplorer(opt => opt.GroupNameFormat = "'v'VVV");
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
             services.AddApplication();
         }
 

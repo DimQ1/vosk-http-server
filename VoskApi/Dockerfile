@@ -22,10 +22,13 @@ COPY ./vosk-model-ru-*.zip .
 ENV RUVERSION 0.22
 RUN dir
 RUN unzip vosk-model-ru-${RUVERSION}.zip \
-   && mv vosk-model-ru-${RUVERSION} model \
+   && mv vosk-model-ru-${RUVERSION} TextModel \
    && rm -rf model/extra \
    && rm -rf model/rescore/G.carpa \
    && rm -rf vosk-model-ru-${RUVERSION}.zip
+RUN unzip vosk-model-spk-${RUVERSION}.zip \
+   && mv vosk-model-spk-${RUVERSION} SpeakerModel \
+   && rm -rf vosk-model-spk-${RUVERSION}.zip
 WORKDIR /app
 EXPOSE 80
 COPY --from=publish /app/publish .
