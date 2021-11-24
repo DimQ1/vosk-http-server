@@ -19,16 +19,18 @@ RUN echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";"
 RUN apt-get update && apt install unzip
 RUN apt install libatomic1
 COPY ./vosk-model-ru-*.zip .
+COPY ./vosk-model-spk-*.zip .
 ENV RUVERSION 0.22
+ENV SPKVERSION 0.4
 RUN dir
 RUN unzip vosk-model-ru-${RUVERSION}.zip \
    && mv vosk-model-ru-${RUVERSION} TextModel \
    && rm -rf model/extra \
    && rm -rf model/rescore/G.carpa \
    && rm -rf vosk-model-ru-${RUVERSION}.zip
-RUN unzip vosk-model-spk-${RUVERSION}.zip \
-   && mv vosk-model-spk-${RUVERSION} SpeakerModel \
-   && rm -rf vosk-model-spk-${RUVERSION}.zip
+RUN unzip vosk-model-spk-${SPKVERSION}.zip \
+   && mv vosk-model-spk-${SPKVERSION} SpeakerModel \
+   && rm -rf vosk-model-spk-${SPKVERSION}.zip
 WORKDIR /app
 EXPOSE 80
 COPY --from=publish /app/publish .
