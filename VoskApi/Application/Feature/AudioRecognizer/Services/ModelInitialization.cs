@@ -4,13 +4,15 @@ using Vosk;
 
 namespace VoskApi.Application.Feature.AudioRecognizer.Services
 {
-    public class ModelInitialization : IModelInitialization
+    public static class ModelInitialization
     {
-        public ModelInitialization()
-        {
-            Model = new Model(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "model"));
-        }
+        
+         private static Model _textModel = new Model(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "TextModel"));
+         private static SpkModel _speakerModel = new SpkModel(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "SpeakerModel"));
 
-        public Model Model { get; }
+
+         public static Model TextModel => _textModel;
+
+         public static SpkModel SpeakerModel => _speakerModel;
     }
 }

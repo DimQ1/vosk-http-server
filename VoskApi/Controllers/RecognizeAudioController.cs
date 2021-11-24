@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using VoskApi.Application.Feature.AudioRecognizer.Commands;
 
 namespace VoskApi.Controllers
 {
     [ApiVersion("1.0")]
+    [Route("api/{version:apiVersion}/[controller]/[action]")]
     public class RecognizeAudioController : BaseApiController
     {
        private readonly ILogger<RecognizeAudioController> _logger;
@@ -20,11 +18,10 @@ namespace VoskApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadToFileSystem(IFormFile file)
+        [Route("~/recognize")]
+        public async Task<IActionResult> UploadFileForTheRecognizeText(IFormFile file)
         {
-          return  Ok(await Mediator.Send(new RecognizeStreamCommand() {AudioStream = file.OpenReadStream()}));
+            return Ok(await Mediator.Send(new TextRecognizeCommand() { AudioStream = file.OpenReadStream() }));
         }
-
-
     }
 }

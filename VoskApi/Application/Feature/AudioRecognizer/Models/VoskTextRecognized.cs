@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace VoskApi.Application.Feature.AudioRecognizer.Models
 {
-    public class RecognizedChunk
+    public class VoskTextRecognized
     {
         [JsonPropertyName("result")]
         public List<Result> Result { get; set; }
@@ -13,5 +13,12 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Models
         
         [JsonPropertyName("str")]
         public string Str { get; set; }
+        
+        [JsonPropertyName("spk")]
+        public List<float> Spk { get; set; }
+        
+        [JsonPropertyName("spk_frames")]
+        public int SpkFrames { get; set; }
+
     }
 }

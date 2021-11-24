@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace VoskApi.Application.Feature.AudioRecognizer.Services
+namespace VoskApi.Application.Feature.AudioRecognizer.Helpers
 {
     public interface IWavUtil
     {
