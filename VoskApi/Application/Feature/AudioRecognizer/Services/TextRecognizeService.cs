@@ -21,6 +21,8 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             _model = ModelInitialization.TextModel;
             _spkModel = ModelInitialization.SpeakerModel;
 
+            Vosk.Vosk.GpuInit();
+            Vosk.Vosk.GpuThreadInit();
             Vosk.Vosk.SetLogLevel(-1);
         }
 

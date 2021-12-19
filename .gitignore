@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/vosk-model-ru-0.22.zip
+/vosk-model-spk-0.4.zip
