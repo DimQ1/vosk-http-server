@@ -17,7 +17,7 @@ WORKDIR /app
 
 RUN echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";" | cat > /etc/apt/apt.conf.d/10no--check-valid-until
 RUN apt-get update && apt install unzip
-RUN apt install libatomic1
+RUN apt install libatomic1 -y ffmpeg libgdiplus
 COPY ./vosk-model-ru-*.zip .
 COPY ./vosk-model-spk-*.zip .
 ENV RUVERSION 0.22

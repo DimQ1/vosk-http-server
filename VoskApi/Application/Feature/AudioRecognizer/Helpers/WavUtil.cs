@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using FFMpegCore;
 using FFMpegCore.Enums;
@@ -10,6 +11,15 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Helpers
 {
     public class WavUtil : IWavUtil
     {
+
+        public WavUtil()
+        {
+            if (OSUtils.GetOperatingSystem() == OSPlatform.Linux)
+            {
+                GlobalFFOptions.Configure(options => options.BinaryFolder = "/usr/bin");
+            }
+        }
+
         public Stream ConvertToWavFormatForRecognize(Stream stream)
         {
             var outStream = new MemoryStream();
@@ -21,17 +31,14 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Helpers
             return outStream;
         }
 
-        public async Task<Stream> ConvertToWavFormaForRocognizeFFMpeg(Stream inputStream)
+        public async Task<Stream> ConvertToWavStreamForRocognizeFfMpeg(Stream inputStream)
         {
             //https://github.com/rosenbjerg/FFMpegCore/issues/112
             var outputStream = new MemoryStream();
             await FFMpegArguments
                 .FromPipeInput(new StreamPipeSource(inputStream))
                 .OutputToPipe(new StreamPipeSink(outputStream), options => options
-                .ForceFormat("s16le -ar 16k -ac 1 ")
-                .WithAudioSamplingRate(16000)
-                .CopyChannel(Channel.Audio)
-                .WithAudioBitrate(16)
+                    .ForceFormat("s16le -ar 16k -ac 1 -f wav")
                 )
                 .ProcessAsynchronously();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Vosk;
 using VoskApi.Application.Feature.AudioRecognizer.Helpers;
 using VoskApi.Application.Feature.AudioRecognizer.Models;
@@ -25,11 +26,9 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             Vosk.Vosk.GpuThreadInit();
             Vosk.Vosk.SetLogLevel(-1);
         }
-
-
-        public TextRecognized Recognize(Stream stream)
+        public async Task<TextRecognized> Recognize(Stream stream)
         {
-            var recognizedChunks = RecognizeChunks(_wavUtil.ConvertToWavFormatForRecognize(stream));
+            var recognizedChunks = RecognizeChunks(await _wavUtil.ConvertToWavStreamForRocognizeFfMpeg(stream));
 
             var results = recognizedChunks.SelectMany(ch => ch?.Result ?? new List<Result>()).ToList();
             var text = string.Join(" ", recognizedChunks.Select(ch => ch.Text).ToList());
@@ -63,6 +62,7 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             stream.Position = 0;
             byte[] buffer = new byte[4096];
             int bytesRead;
+
             while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
                 if (rec.AcceptWaveform(buffer, bytesRead))
@@ -71,8 +71,6 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
                     var recognizedResultChunk = JsonSerializer.Deserialize<VoskTextRecognized>(result);
                     recognizedResults.Add(recognizedResultChunk);
                 }
-
-
             }
 
             recognizedResults.Add(JsonSerializer.Deserialize<VoskTextRecognized>(rec.FinalResult()));
