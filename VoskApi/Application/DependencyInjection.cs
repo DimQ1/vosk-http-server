@@ -13,7 +13,8 @@ public static class DependencyInjection
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddSingleton<IRecognizeResultHelper, RecognizeResultHelper>();
         services.AddSingleton<ITextRecognizeService, TextRecognizeService>();
-        services.AddSingleton<IWavUtil, WavUtil>();
+        services.AddSingleton<IAudioConvertService, AudioConvertService>();
+        services.AddSingleton<IAudioConvertService, AudioConvertService>();
 
         //initialization model before start api
         var initClass = ModelInitialization.SpeakerModel;

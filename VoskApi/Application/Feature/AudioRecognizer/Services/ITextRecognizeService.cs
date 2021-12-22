@@ -6,5 +6,5 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services;
 
 public interface ITextRecognizeService
 {
-    Task<TextRecognized> Recognize(Stream stream);
+    TextRecognized Recognize(Stream stream, string filename);
 }

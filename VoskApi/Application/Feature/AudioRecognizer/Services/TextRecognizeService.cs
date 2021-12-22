@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Vosk;
-using VoskApi.Application.Feature.AudioRecognizer.Helpers;
 using VoskApi.Application.Feature.AudioRecognizer.Models;
 
 namespace VoskApi.Application.Feature.AudioRecognizer.Services
@@ -14,11 +12,11 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
     {
         private readonly SpkModel _spkModel;
         private readonly Model _model;
-        private readonly IWavUtil _wavUtil;
+        private readonly IAudioConvertService _audioConvertService;
 
-        public TextRecognizeService(IWavUtil wavUtil)
+        public TextRecognizeService(IAudioConvertService audioConvertService)
         {
-            _wavUtil = wavUtil;
+            _audioConvertService = audioConvertService;
             _model = ModelInitialization.TextModel;
             _spkModel = ModelInitialization.SpeakerModel;
 
@@ -26,9 +24,11 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             Vosk.Vosk.GpuThreadInit();
             Vosk.Vosk.SetLogLevel(-1);
         }
-        public async Task<TextRecognized> Recognize(Stream stream)
+        public TextRecognized Recognize(Stream stream, string filename)
         {
-            var recognizedChunks = RecognizeChunks(await _wavUtil.ConvertToWavStreamForRocognizeFfMpeg(stream));
+            var convertedStream = _audioConvertService.ConvertToWavStreamForRecognize(stream, filename);
+
+            var recognizedChunks = RecognizeChunks(convertedStream);
 
             var results = recognizedChunks.SelectMany(ch => ch?.Result ?? new List<Result>()).ToList();
             var text = string.Join(" ", recognizedChunks.Select(ch => ch.Text).ToList());
