@@ -18,7 +18,7 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
         {
             _audioConvertService = audioConvertService;
             _model = ModelInitialization.TextModel;
-            _spkModel = ModelInitialization.SpeakerModel;
+           // _spkModel = ModelInitialization.SpeakerModel;
 
             Vosk.Vosk.GpuInit();
             Vosk.Vosk.GpuThreadInit();
@@ -54,7 +54,7 @@ namespace VoskApi.Application.Feature.AudioRecognizer.Services
             var recognizedResults = new List<VoskTextRecognized>();
 
             using var rec = new VoskRecognizer(_model, 16000.0f);
-            rec.SetSpkModel(_spkModel);
+            //rec.SetSpkModel(_spkModel);
 
             rec.SetMaxAlternatives(0);
             rec.SetWords(true);
