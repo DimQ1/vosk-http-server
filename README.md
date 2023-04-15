@@ -3,7 +3,7 @@ This is the HTTP server for audio recognize. This version is not multilangual I 
 
 # How to run
 1. Clone repository.
-2. Download model [vosk-model-ru-0.22.zip](https://alphacephei.com/vosk/models/vosk-model-ru-0.22.zip)
+2. Download model [vosk-model-ru-0.42](https://alphacephei.com/vosk/models/vosk-model-ru-0.42.zip)
 3. Move vosk-model-ru-0.22.zip into vosk-htt-server folder
 4. 2. Download model [vosk-model-spk-0.4.zip](https://alphacephei.com/vosk/models/vosk-model-spk-0.4.zip)
 4. Move vosk-model-spk-0.4.zip into vosk-htt-server folder
